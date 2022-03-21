@@ -73,9 +73,10 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	standardlayer.Send(utz.BytesToCcpFrame(resp), &ackHeader, ip, port)
 }
 
-// Register 注册服务.与knock.Register功能一样
-func Register(protocol uint8, cmd uint16, callback knock.CallbackFunc) {
-	knock.Register(utz.HeaderCmp, utz.CmpApplySlave, callback)
+// Register 注册服务
+// 回调服务有3个参数:IA地址:uint32,IP:uint32,端口:uint16
+func Register(protocol uint8, cmd uint8, callback knock.CallbackFunc) {
+	knock.Register(uint16(protocol), uint16(cmd), callback)
 }
 
 // Send 基于CCP协议发送数据

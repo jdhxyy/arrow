@@ -65,16 +65,24 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		return
 	}
 
+	// 加命令字回复
+	respReal := make([]uint8, 1)
+	respReal[0] = utz.GetAckCmd(cmp[0])
+	respReal = append(respReal, resp...)
+
 	var ackHeader utz.StandardHeader
 	ackHeader.Version = utz.ProtocolVersion
 	ackHeader.NextHead = utz.HeaderCmp
 	ackHeader.SrcIA = gLocalIA
 	ackHeader.DstIA = standardHeader.SrcIA
-	standardlayer.Send(utz.BytesToCcpFrame(resp), &ackHeader, ip, port)
+
+	// 加命令字回复
+	standardlayer.Send(utz.BytesToCcpFrame(respReal), &ackHeader, ip, port)
 }
 
 // Register 注册服务
 // 回调服务有3个参数:IA地址:uint32,IP:uint32,端口:uint16
+// 回复时不需要带命令字,自动带回复命令字
 func Register(protocol uint8, cmd uint8, callback knock.CallbackFunc) {
 	knock.Register(uint16(protocol), uint16(cmd), callback)
 }

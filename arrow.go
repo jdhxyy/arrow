@@ -88,7 +88,7 @@ func Register(protocol uint8, cmd uint8, callback knock.CallbackFunc) {
 }
 
 // Send 基于CCP协议发送数据
-func Send(cmd uint8, data []uint8, protocol uint8, dstIA uint32) error {
+func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	if gIsConnectParent == false {
 		return errors.New("is not connect")
 	}

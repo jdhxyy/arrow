@@ -1,0 +1,14 @@
+github.com/jdhxyy/crc16 v0.0.0-20210228220550-7713e2f73123 h1:A3y5GyayKrpj+4EwUnvb8VucRShsbX4PDXlcRzTRunQ=
+github.com/jdhxyy/crc16 v0.0.0-20210228220550-7713e2f73123/go.mod h1:Bn2AQAKww6qAfp1Grz+AK2cnYKB/9a2WOcfkidTAWJQ=
+github.com/jdhxyy/knock v0.0.0-20210604000600-f7160a766d79 h1:szNkWPR0sLXOh/ebv1n1C+tvBCl/OZv1mB3YDN0e+W8=
+github.com/jdhxyy/knock v0.0.0-20210604000600-f7160a766d79/go.mod h1:jswTBkOcUEtJStgUFPGfEC7dvELpgweDtS01iYg3ySs=
+github.com/jdhxyy/lagan v0.0.0-20220306095625-f4e9fff73677 h1:s4vg5Sk2c4NPYbJhXg6GGl/VhAp/Ho7VMVscybDvtrs=
+github.com/jdhxyy/lagan v0.0.0-20220306095625-f4e9fff73677/go.mod h1:thKkxhIW5/LKfiKOzNj/X+BU4LmlEZHRZPwT/EVFwqg=
+github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec h1:86zMDf/wQmYk3vO12ZeUnPo67SvBGEKs39ux1R6mNGc=
+github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec/go.mod h1:0FF4SAVPV/pENqBY/5aXnAuXz9lStYrL2/Vcli86t/E=
+github.com/jdhxyy/standardlayer v0.0.0-20220321023714-42ae983f86e2 h1:NZQqdfy8kBob1I5z57Nv9dOjVw7M1XBcxdPGBbVFVh4=
+github.com/jdhxyy/standardlayer v0.0.0-20220321023714-42ae983f86e2/go.mod h1:snf7RDbsXab4mtmX02equTYQcHQsgGd0R2shvM+LYqQ=
+github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9 h1:md65l8P83bE88DZCsgDmBO+TndF5zFyPKsSmR+GrI0U=
+github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9/go.mod h1:dxhHbIrH1iS8t1fNvWu0/OWohMb9nIe6EotYj1apRgU=
+github.com/jdhxyy/utz v0.0.0-20220320033112-f0cd4306157d h1:c7y6QA5SnyWSqrK/qsKy3joPwvxcuk56SboRQ5ROkrQ=
+github.com/jdhxyy/utz v0.0.0-20220320033112-f0cd4306157d/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=

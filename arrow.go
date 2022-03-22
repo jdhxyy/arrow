@@ -110,3 +110,18 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 func IsConnect() bool {
 	return gIsConnectParent
 }
+
+// GetParentIA 读取父节点IA
+func GetParentIA() uint32 {
+	return gSlaveIA
+}
+
+// GetParentIP 读取父节点IP
+func GetParentIP() uint32 {
+	return gSlaveIP
+}
+
+// GetParentPort 读取父节点端口
+func GetParentPort() uint16 {
+	return gSlavePort
+}

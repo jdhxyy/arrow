@@ -86,5 +86,8 @@ func sendApply() {
 func startApply() {
 	if gIsApplyOK == true {
 		gIsApplyOK = false
+		gSlaveIA = utz.IAInvalid
+		gSlaveIP = 0
+		gSlavePort = 0
 	}
 }

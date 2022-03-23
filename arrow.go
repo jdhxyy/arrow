@@ -64,7 +64,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		return
 	}
 
-	cmp := utz.CcpFrameToBytes(data)
+	cmp := utz.CcpFrameToBytes(data[offset:])
 	if cmp == nil || len(cmp) == 0 {
 		lagan.Warn(tag, "ccp frame to bytes failed.ia:0x%x addr:0x%08x:%d", standardHeader.SrcIA, ip, port)
 		return

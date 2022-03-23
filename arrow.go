@@ -45,18 +45,32 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	if gLocalIA == utz.IAInvalid || standardHeader.DstIA != gLocalIA {
 		return
 	}
-	if standardHeader.NextHead != utz.HeaderCcp && standardHeader.NextHead != utz.HeaderCmp &&
-		standardHeader.NextHead != utz.HeaderDup {
+
+	var agentHeader *utz.AgentHeader = nil
+	offset := 0
+	nextHead := standardHeader.NextHead
+	if standardHeader.NextHead == utz.HeaderAgent {
+		agentHeader, offset = utz.BytesToAgentHeader(data)
+		if agentHeader == nil || offset == 0 {
+			lagan.Warn(tag, "bytes to agent header failed.ia:0x%08x addr:0x%08x:%d", standardHeader.SrcIA, ip,
+				port)
+			return
+		}
+		nextHead = agentHeader.NextHead
+		rtAdd(standardHeader.SrcIA, agentHeader.IA)
+	}
+
+	if nextHead != utz.HeaderCcp && nextHead != utz.HeaderCmp && nextHead != utz.HeaderDup {
 		return
 	}
 
 	cmp := utz.CcpFrameToBytes(data)
 	if cmp == nil || len(cmp) == 0 {
-		lagan.Warn(tag, "ccp frame to bytes failed.ia:0x%x ip:0x%x port:%d", standardHeader.SrcIA, ip, port)
+		lagan.Warn(tag, "ccp frame to bytes failed.ia:0x%x addr:0x%08x:%d", standardHeader.SrcIA, ip, port)
 		return
 	}
 	if len(cmp) == 0 {
-		lagan.Warn(tag, "data len is wrong.ia:0x%x ip:0x%x port:%d", standardHeader.SrcIA, ip, port)
+		lagan.Warn(tag, "data len is wrong.ia:0x%x addr:0x%08x:%d", standardHeader.SrcIA, ip, port)
 		return
 	}
 
@@ -76,6 +90,16 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	ackHeader.SrcIA = gLocalIA
 	ackHeader.DstIA = standardHeader.SrcIA
 
+	if agentHeader != nil {
+		// 如果发过来有代理头部,则回复需要加路由头部
+		var routeHeader utz.RouteHeader
+		routeHeader.NextHead = ackHeader.NextHead
+		routeHeader.IA = agentHeader.IA
+
+		ackHeader.NextHead = utz.HeaderRoute
+		respReal = append(routeHeader.Bytes(), respReal...)
+	}
+
 	// 加命令字回复
 	standardlayer.Send(utz.BytesToCcpFrame(respReal), &ackHeader, ip, port)
 }
@@ -93,6 +117,15 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 		return errors.New("is not connect")
 	}
 
+	var item *Item = nil
+	if utz.IsGlobalIA(dstIA) == false {
+		// 不是全球单播地址,则需要代理
+		item = rtGet(dstIA)
+		if item == nil {
+			return errors.New("ia is not global")
+		}
+	}
+
 	var header utz.StandardHeader
 	header.Version = utz.ProtocolVersion
 	header.NextHead = protocol
@@ -102,7 +135,19 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	arr := make([]uint8, 1+len(data))
 	arr[0] = cmd
 	arr = append(arr, data...)
-	standardlayer.Send(utz.BytesToCcpFrame(arr), &header, gCoreIP, gCorePort)
+	arr = utz.BytesToCcpFrame(arr)
+
+	if item != nil {
+		// 固定单播地址需要加路由头部
+		var routeHeader utz.RouteHeader
+		routeHeader.NextHead = header.NextHead
+		routeHeader.IA = item.AgentIA
+
+		header.NextHead = utz.HeaderRoute
+		arr = append(routeHeader.Bytes(), arr...)
+	}
+
+	standardlayer.Send(arr, &header, gCoreIP, gCorePort)
 	return nil
 }
 

@@ -83,6 +83,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	respReal := make([]uint8, 1)
 	respReal[0] = utz.GetAckCmd(cmp[0])
 	respReal = append(respReal, resp...)
+	respReal = utz.BytesToCcpFrame(respReal)
 
 	var ackHeader utz.StandardHeader
 	ackHeader.Version = utz.ProtocolVersion
@@ -101,7 +102,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	}
 
 	// 加命令字回复
-	standardlayer.Send(utz.BytesToCcpFrame(respReal), &ackHeader, ip, port)
+	standardlayer.Send(respReal, &ackHeader, ip, port)
 }
 
 // Register 注册服务

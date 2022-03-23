@@ -74,7 +74,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		return
 	}
 
-	resp := knock.Call(uint16(standardHeader.NextHead), uint16(cmp[0]), cmp[1:], standardHeader.SrcIA, ip, port)
+	resp := knock.Call(uint16(nextHead), uint16(cmp[0]), cmp[1:], standardHeader.SrcIA, ip, port)
 	if resp == nil {
 		return
 	}
@@ -86,7 +86,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 
 	var ackHeader utz.StandardHeader
 	ackHeader.Version = utz.ProtocolVersion
-	ackHeader.NextHead = utz.HeaderCmp
+	ackHeader.NextHead = nextHead
 	ackHeader.SrcIA = gLocalIA
 	ackHeader.DstIA = standardHeader.SrcIA
 

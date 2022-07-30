@@ -78,6 +78,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	if resp == nil {
 		return
 	}
+	resp = utz.BytesToCcpFrame(resp)
 
 	var ackHeader utz.StandardHeader
 	ackHeader.Version = utz.ProtocolVersion

@@ -127,7 +127,7 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	header.SrcIA = gLocalIA
 	header.DstIA = dstIA
 
-	arr := make([]uint8, 1+len(data))
+	arr := make([]uint8, 1)
 	arr[0] = cmd
 	arr = append(arr, data...)
 	arr = utz.BytesToCcpFrame(arr)

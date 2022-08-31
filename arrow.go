@@ -81,10 +81,10 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	resp = utz.BytesToCcpFrame(resp)
 
 	var ackHeader utz.StandardHeader
-	ackHeader.Version = utz.ProtocolVersion
 	ackHeader.NextHead = nextHead
 	ackHeader.SrcIA = gLocalIA
 	ackHeader.DstIA = standardHeader.SrcIA
+	ackHeader.FrameIndex = utz.GetFrameIndex()
 
 	if agentHeader != nil {
 		// 如果发过来有代理头部,则回复需要加路由头部
@@ -122,10 +122,10 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	}
 
 	var header utz.StandardHeader
-	header.Version = utz.ProtocolVersion
 	header.NextHead = protocol
 	header.SrcIA = gLocalIA
 	header.DstIA = dstIA
+	header.FrameIndex = utz.GetFrameIndex()
 
 	arr := make([]uint8, 1)
 	arr[0] = cmd

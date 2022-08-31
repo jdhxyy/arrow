@@ -61,10 +61,10 @@ func apply() {
 
 func sendApply() {
 	var header utz.StandardHeader
-	header.Version = utz.ProtocolVersion
 	header.SrcIA = gLocalIA
 	header.DstIA = gCoreIA
 	header.NextHead = utz.HeaderCmp
+	header.FrameIndex = utz.GetFrameIndex()
 
 	var req utz.CmpReqApplySlave
 	req.AssignedSlaveIA = gSlaveIA

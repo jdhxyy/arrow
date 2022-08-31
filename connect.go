@@ -73,10 +73,10 @@ func connect() {
 func sendConnect() {
 	lagan.Info(tag, "send connect frame")
 	var header utz.StandardHeader
-	header.Version = utz.ProtocolVersion
 	header.SrcIA = gLocalIA
 	header.DstIA = gSlaveIA
 	header.NextHead = utz.HeaderCmp
+	header.FrameIndex = utz.GetFrameIndex()
 
 	standardlayer.Send(utz.BytesToCcpFrame([]uint8{utz.CmpConnectParent}), &header, gSlaveIP, gSlavePort)
 }

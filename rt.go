@@ -17,6 +17,8 @@ type Item struct {
 	IA uint32
 	// 代理地址
 	AgentIA uint32
+	// 是否TCP节点.TCP节点的代理地址与核心网一致
+	IsTcp bool
 	// 更新时间戳.单位:s
 	timestamp int64
 }
@@ -69,7 +71,7 @@ func rtCheckTimeout() {
 }
 
 // rtAdd 增加条目.条目如果存在则会更新
-func rtAdd(ia uint32, agentIA uint32) {
+func rtAdd(ia uint32, agentIA uint32, isTcp bool) {
 	lagan.Debug(tag, "rt add:ia:0x%08x agent:0x%08x", ia, agentIA)
 
 	lock.Lock()
@@ -86,6 +88,7 @@ func rtAdd(ia uint32, agentIA uint32) {
 	}
 	value.IA = ia
 	value.AgentIA = agentIA
+	value.IsTcp = isTcp
 	value.timestamp = time.Now().Unix()
 }
 
@@ -102,7 +105,7 @@ func rtDelete(ia uint32) {
 	rtList.Remove(ia)
 }
 
-// rtGet 获取代理节点地址.返回0表示获取失败
+// rtGet 获取代理节点地址.返回nil表示获取失败
 func rtGet(ia uint32) *Item {
 	lock.Lock()
 	defer lock.Unlock()

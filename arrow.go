@@ -46,10 +46,34 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		return
 	}
 
-	var agentHeader *utz.AgentHeader = nil
 	offset := 0
 	nextHead := standardHeader.NextHead
-	if standardHeader.NextHead == utz.HeaderAgent {
+
+	var agentHeader *utz.AgentHeader = nil
+	var tcpHeader *utz.TcpHeader = nil
+	if standardHeader.NextHead == utz.HeaderTcp {
+		tcpHeader, offset = utz.BytesToTcpHeader(data)
+		if tcpHeader == nil || offset == 0 {
+			lagan.Warn(tag, "bytes to tcp header failed.ia:0x%08x addr:0x%08x:%d", standardHeader.SrcIA, ip,
+				port)
+			return
+		}
+		if tcpHeader.DstRelayIA != gLocalIA {
+			lagan.Error(tag, "tcp dst relay ia is not me:0x%08x", tcpHeader.DstRelayIA)
+			return
+		}
+		nextHead = tcpHeader.NextHead
+		rtAdd(standardHeader.SrcIA, tcpHeader.SrcRelayIA, true)
+
+		// 回复应答帧
+		sendAckFrame(standardHeader, tcpHeader)
+		// 如果非重复帧则处理
+		if dfInsert(standardHeader.SrcIA, uint32(standardHeader.FrameIndex)) == false {
+			lagan.Warn(tag, "repeat frame.ia:0x%08x addr:0x%08x:%d index:%d", standardHeader.SrcIA, ip, port,
+				standardHeader.FrameIndex)
+			return
+		}
+	} else if standardHeader.NextHead == utz.HeaderAgent {
 		agentHeader, offset = utz.BytesToAgentHeader(data)
 		if agentHeader == nil || offset == 0 {
 			lagan.Warn(tag, "bytes to agent header failed.ia:0x%08x addr:0x%08x:%d", standardHeader.SrcIA, ip,
@@ -57,7 +81,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 			return
 		}
 		nextHead = agentHeader.NextHead
-		rtAdd(standardHeader.SrcIA, agentHeader.IA)
+		rtAdd(standardHeader.SrcIA, agentHeader.IA, false)
 	}
 
 	if nextHead != utz.HeaderCcp && nextHead != utz.HeaderCmp && nextHead != utz.HeaderDup {
@@ -86,7 +110,12 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	ackHeader.DstIA = standardHeader.SrcIA
 	ackHeader.FrameIndex = utz.GetFrameIndex()
 
-	if agentHeader != nil {
+	if tcpHeader != nil {
+		tcpHeader.DstRelayIA = tcpHeader.SrcRelayIA
+		tcpHeader.SrcRelayIA = gLocalIA
+
+		resp = append(tcpHeader.Bytes(), resp...)
+	} else if agentHeader != nil {
 		// 如果发过来有代理头部,则回复需要加路由头部
 		var routeHeader utz.RouteHeader
 		routeHeader.NextHead = ackHeader.NextHead
@@ -97,6 +126,29 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	}
 
 	standardlayer.Send(resp, &ackHeader, ip, port)
+}
+
+func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) {
+	var ackStandardHeader utz.StandardHeader
+	ackStandardHeader = *standardHeader
+	ackStandardHeader.DstIA = tcpHeader.SrcRelayIA
+	ackStandardHeader.SrcIA = gLocalIA
+
+	var ackTcpHeader utz.TcpHeader
+	ackTcpHeader = *tcpHeader
+	ackTcpHeader.DstRelayIA = tcpHeader.SrcRelayIA
+	ackTcpHeader.SrcRelayIA = gLocalIA
+	ackTcpHeader.NextHead = utz.HeaderTcp
+
+	var payload []uint8
+	payload = append(payload, utz.TcpCmdAck)
+	payload = append(payload, standardHeader.FrameIndex)
+
+	var frame []uint8
+	frame = append(frame, ackTcpHeader.Bytes()...)
+	frame = append(frame, utz.BytesToCcpFrame(payload)...)
+
+	standardlayer.Send(frame, &ackStandardHeader, gCoreIP, gCorePort)
 }
 
 // Register 注册服务
@@ -112,10 +164,16 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 		return errors.New("is not connect")
 	}
 
+	isTcp := false
+	rtItem := rtGet(dstIA)
+	if rtItem != nil {
+		isTcp = rtItem.IsTcp
+	}
+
 	var item *Item = nil
 	if utz.IsGlobalIA(dstIA) == false {
 		// 不是全球单播地址,则需要代理
-		item = rtGet(dstIA)
+		item = rtItem
 		if item == nil {
 			return errors.New("ia is not global")
 		}
@@ -132,7 +190,20 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	arr = append(arr, data...)
 	arr = utz.BytesToCcpFrame(arr)
 
-	if item != nil {
+	if isTcp == true {
+		var tcpHeader utz.TcpHeader
+		tcpHeader.SrcRelayIA = gLocalIA
+		tcpHeader.DstRelayIA = gCoreIA
+		tcpHeader.ControlWord.IsQos1 = true
+		tcpHeader.ControlWord.IsContinueSend = false
+		tcpHeader.ControlWord.IsAckSend = false
+		tcpHeader.ControlWord.IsReceiveAckSend = false
+		tcpHeader.AgingTime = 0
+		tcpHeader.NextHead = header.NextHead
+
+		header.NextHead = utz.HeaderTcp
+		arr = append(tcpHeader.Bytes(), arr...)
+	} else if item != nil {
 		// 固定单播地址需要加路由头部
 		var routeHeader utz.RouteHeader
 		routeHeader.NextHead = header.NextHead

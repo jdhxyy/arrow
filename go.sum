@@ -19,6 +19,8 @@ github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9 h1:md65l8P83bE88DZCsgDm
 github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9/go.mod h1:dxhHbIrH1iS8t1fNvWu0/OWohMb9nIe6EotYj1apRgU=
 github.com/jdhxyy/utz v0.0.0-20220901135340-5c9e0b727667 h1:7SXMToYKgxdABpSDTZgdnYbOVRsn7v1OjV/izpVRg2Y=
 github.com/jdhxyy/utz v0.0.0-20220901135340-5c9e0b727667/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=
+github.com/jdhxyy/utz v0.0.0-20221223054211-f2a8bb7143d5 h1:OeDor9mXwPumm1FdXbQ/NDs6lD6MDIaOAyseGyl2it4=
+github.com/jdhxyy/utz v0.0.0-20221223054211-f2a8bb7143d5/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=

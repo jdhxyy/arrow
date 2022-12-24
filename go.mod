@@ -9,7 +9,7 @@ require (
 	github.com/jdhxyy/skiplist v1.1.4
 	github.com/jdhxyy/standardlayer v0.0.0-20220901135518-a8f2820e73c8
 	github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9
-	github.com/jdhxyy/utz v0.0.0-20220901135340-5c9e0b727667
+	github.com/jdhxyy/utz v0.0.0-20221223054211-f2a8bb7143d5
 )
 
 require github.com/jdhxyy/crc16 v0.0.0-20210228220550-7713e2f73123 // indirect

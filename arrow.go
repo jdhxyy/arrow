@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/jdhxyy/knock"
 	"github.com/jdhxyy/lagan"
+	sbc "github.com/jdhxyy/sbc-golang"
 	"github.com/jdhxyy/standardlayer"
 	"github.com/jdhxyy/udp"
 	"github.com/jdhxyy/utz"
@@ -142,7 +143,16 @@ func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) 
 
 	var payload []uint8
 	payload = append(payload, utz.TcpCmdAck)
-	payload = append(payload, standardHeader.FrameIndex)
+
+	var ack utz.TcpAck
+	ack.IA = standardHeader.SrcIA
+	ack.Index = standardHeader.FrameIndex
+	ackBytes, err := sbc.StructToBytes(&ack)
+	if err != nil {
+		lagan.Error(tag, "send ack failed.struct to bytes failed.error:%s", err)
+		return
+	}
+	payload = append(payload, ackBytes...)
 
 	var frame []uint8
 	frame = append(frame, ackTcpHeader.Bytes()...)

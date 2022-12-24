@@ -18,8 +18,8 @@ github.com/jdhxyy/standardlayer v0.0.0-20220901135518-a8f2820e73c8/go.mod h1:zs6
 github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9 h1:md65l8P83bE88DZCsgDmBO+TndF5zFyPKsSmR+GrI0U=
 github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9/go.mod h1:dxhHbIrH1iS8t1fNvWu0/OWohMb9nIe6EotYj1apRgU=
 github.com/jdhxyy/utz v0.0.0-20220901135340-5c9e0b727667/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=
-github.com/jdhxyy/utz v0.0.0-20221224090414-cd53aec198e8 h1:lS4v//xG+CeniWVzHwvvM9alBnkt0b1mLdG5wOM+UUw=
-github.com/jdhxyy/utz v0.0.0-20221224090414-cd53aec198e8/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=
+github.com/jdhxyy/utz v0.0.0-20221224093846-462e3f8a62f7 h1:kxN2FoP7SuyYeZVjyh8kpuNNdgb+Z7jtM2SGPD8oVI4=
+github.com/jdhxyy/utz v0.0.0-20221224093846-462e3f8a62f7/go.mod h1:eKM112NP2qpGHq8Sh9RQIH42YobWXKja0AFhY/OKQCs=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=

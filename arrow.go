@@ -138,7 +138,7 @@ func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) 
 	ackTcpHeader = *tcpHeader
 	ackTcpHeader.DstRelayIA = tcpHeader.SrcRelayIA
 	ackTcpHeader.SrcRelayIA = gLocalIA
-	ackTcpHeader.NextHead = utz.HeaderTcp
+	ackTcpHeader.NextHead = utz.HeaderTcpcmp
 
 	var payload []uint8
 	payload = append(payload, utz.TcpCmdAck)

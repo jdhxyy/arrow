@@ -6,6 +6,7 @@ package arrow
 
 import (
 	"errors"
+	"github.com/jdhxyy/dfdetector"
 	"github.com/jdhxyy/knock"
 	"github.com/jdhxyy/lagan"
 	sbc "github.com/jdhxyy/sbc-golang"
@@ -27,6 +28,7 @@ var gCoreIA uint32
 func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uint32, corePort uint16) error {
 	lagan.Info(tag, "load")
 
+	dfdetector.Load(5000, 250)
 	err := udp.Load(localIP, localPort, 4096)
 	if err != nil {
 		lagan.Error(tag, "load failed because udp load failed:%s", err)
@@ -69,7 +71,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		// 回复应答帧
 		sendAckFrame(standardHeader, tcpHeader)
 		// 如果非重复帧则处理
-		if dfInsert(standardHeader.SrcIA, uint32(standardHeader.FrameIndex)) == false {
+		if dfdetector.Insert(standardHeader.SrcIA, uint32(standardHeader.FrameIndex)) == false {
 			lagan.Warn(tag, "repeat frame.ia:0x%08x addr:0x%08x:%d index:%d", standardHeader.SrcIA, ip, port,
 				standardHeader.FrameIndex)
 			return

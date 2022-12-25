@@ -3,6 +3,7 @@ module github.com/jdhxyy/arrow
 go 1.17
 
 require (
+	github.com/jdhxyy/dfdetector v0.0.0-20221225000254-8a4fd00fccfb
 	github.com/jdhxyy/knock v0.0.0-20210604000600-f7160a766d79
 	github.com/jdhxyy/lagan v0.0.0-20220306095625-f4e9fff73677
 	github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec

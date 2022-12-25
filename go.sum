@@ -5,6 +5,8 @@ github.com/huandu/go-assert v1.1.5 h1:fjemmA7sSfYHJD7CUqs9qTwwfdNAx7/j2/ZlHXzNB3
 github.com/huandu/go-assert v1.1.5/go.mod h1:yOLvuqZwmcHIC5rIzrBhT7D3Q9c3GFnd0JrPVhn/06U=
 github.com/jdhxyy/crc16 v0.0.0-20210228220550-7713e2f73123 h1:A3y5GyayKrpj+4EwUnvb8VucRShsbX4PDXlcRzTRunQ=
 github.com/jdhxyy/crc16 v0.0.0-20210228220550-7713e2f73123/go.mod h1:Bn2AQAKww6qAfp1Grz+AK2cnYKB/9a2WOcfkidTAWJQ=
+github.com/jdhxyy/dfdetector v0.0.0-20221225000254-8a4fd00fccfb h1:WvN0n5ORkO/x6295/l2JXlMj+Kn6aSg+K3aeZ7DgBwM=
+github.com/jdhxyy/dfdetector v0.0.0-20221225000254-8a4fd00fccfb/go.mod h1:Sl6bUo0UUAdMYcG83EO3u7lrRJtkpSFzcVWHPwWMk+Q=
 github.com/jdhxyy/knock v0.0.0-20210604000600-f7160a766d79 h1:szNkWPR0sLXOh/ebv1n1C+tvBCl/OZv1mB3YDN0e+W8=
 github.com/jdhxyy/knock v0.0.0-20210604000600-f7160a766d79/go.mod h1:jswTBkOcUEtJStgUFPGfEC7dvELpgweDtS01iYg3ySs=
 github.com/jdhxyy/lagan v0.0.0-20220306095625-f4e9fff73677 h1:s4vg5Sk2c4NPYbJhXg6GGl/VhAp/Ho7VMVscybDvtrs=

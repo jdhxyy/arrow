@@ -189,15 +189,6 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 		}
 	}
 
-	var item *Item = nil
-	if utz.IsGlobalIA(dstIA) == false {
-		// 不是全球单播地址,则需要代理
-		item = rtItem
-		if item == nil {
-			return errors.New("ia is not global")
-		}
-	}
-
 	var header utz.StandardHeader
 	header.NextHead = protocol
 	header.SrcIA = gLocalIA
@@ -222,14 +213,25 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 
 		header.NextHead = utz.HeaderTcp
 		arr = append(tcpHeader.Bytes(), arr...)
-	} else if item != nil {
-		// 固定单播地址需要加路由头部
-		var routeHeader utz.RouteHeader
-		routeHeader.NextHead = header.NextHead
-		routeHeader.IA = item.AgentIA
+	} else {
+		var item *Item = nil
+		if utz.IsGlobalIA(dstIA) == false {
+			// 不是全球单播地址,则需要代理
+			item = rtItem
+			if item == nil {
+				return errors.New("ia is not global")
+			}
+		}
 
-		header.NextHead = utz.HeaderRoute
-		arr = append(routeHeader.Bytes(), arr...)
+		if item != nil {
+			// 固定单播地址需要加路由头部
+			var routeHeader utz.RouteHeader
+			routeHeader.NextHead = header.NextHead
+			routeHeader.IA = item.AgentIA
+
+			header.NextHead = utz.HeaderRoute
+			arr = append(routeHeader.Bytes(), arr...)
+		}
 	}
 
 	standardlayer.Send(arr, &header, gCoreIP, gCorePort)

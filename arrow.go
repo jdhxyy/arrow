@@ -176,10 +176,17 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 		return errors.New("is not connect")
 	}
 
+	// 是否tcp节点规则
+	// 路由表如果能查到，按照路由表来定
+	// 路由表如果查不到，且是固定单播地址，则默认是tcp节点
 	isTcp := false
 	rtItem := rtGet(dstIA)
 	if rtItem != nil {
 		isTcp = rtItem.IsTcp
+	} else {
+		if utz.IsGlobalIA(dstIA) == false {
+			isTcp = true
+		}
 	}
 
 	var item *Item = nil

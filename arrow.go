@@ -114,9 +114,11 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 	ackHeader.FrameIndex = utz.GetFrameIndex()
 
 	if tcpHeader != nil {
+		tcpHeader.NextHead = ackHeader.NextHead
 		tcpHeader.DstRelayIA = tcpHeader.SrcRelayIA
 		tcpHeader.SrcRelayIA = gLocalIA
 
+		ackHeader.NextHead = utz.HeaderTcp
 		resp = append(tcpHeader.Bytes(), resp...)
 	} else if agentHeader != nil {
 		// 如果发过来有代理头部,则回复需要加路由头部

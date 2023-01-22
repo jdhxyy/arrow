@@ -65,7 +65,7 @@ func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uin
 }
 
 // dealSlRx 处理标准层回调函数
-func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, pipe int, ip uint32, port uint16) {
+func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, pipe uint64, ip uint32, port uint16) {
 	if gLocalIA == utz.IAInvalid || standardHeader.DstIA != gLocalIA {
 		return
 	}

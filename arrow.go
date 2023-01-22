@@ -19,7 +19,6 @@ import (
 
 const (
 	tag          = "arrow"
-	gPipe        = 0
 	gFrameMaxLen = 4096
 )
 
@@ -27,6 +26,7 @@ var gLocalIA uint32 = utz.IAInvalid
 var gCoreIP uint32
 var gCorePort uint16
 var gCoreIA uint32
+var gPipe uint64
 
 // Load 模块载入
 func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uint32, corePort uint16) error {
@@ -39,6 +39,7 @@ func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uin
 		return err
 	}
 
+	gPipe = (uint64(localIP) << 32) + uint64(localPort)
 	vsocket.Create(&vsocket.SocketInfo{Pipe: gPipe,
 		IsAllowSend: func() bool {
 			return true

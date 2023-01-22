@@ -80,7 +80,7 @@ func sendApply() {
 	frame := make([]uint8, 1)
 	frame[0] = utz.CmpApplySlave
 	frame = append(frame, reqBytes...)
-	standardlayer.Send(utz.BytesToCcpFrame(frame), &header, gCoreIP, gCorePort)
+	standardlayer.Send(utz.BytesToCcpFrame(frame), &header, gPipe, gCoreIP, gCorePort)
 }
 
 func startApply() {

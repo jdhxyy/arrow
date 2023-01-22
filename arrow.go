@@ -7,16 +7,20 @@ package arrow
 import (
 	"errors"
 	"github.com/jdhxyy/dfdetector"
+	"github.com/jdhxyy/fsp"
 	"github.com/jdhxyy/knock"
 	"github.com/jdhxyy/lagan"
 	sbc "github.com/jdhxyy/sbc-golang"
 	"github.com/jdhxyy/standardlayer"
 	"github.com/jdhxyy/udp"
 	"github.com/jdhxyy/utz"
+	vsocket "github.com/jdhxyy/vsocket-golang"
 )
 
 const (
-	tag = "arrow"
+	tag          = "arrow"
+	gPipe        = 0
+	gFrameMaxLen = 4096
 )
 
 var gLocalIA uint32 = utz.IAInvalid
@@ -29,11 +33,28 @@ func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uin
 	lagan.Info(tag, "load")
 
 	dfdetector.Load(5000, 250)
-	err := udp.Load(localIP, localPort, 4096)
+	err := udp.Load(localIP, localPort, gFrameMaxLen)
 	if err != nil {
 		lagan.Error(tag, "load failed because udp load failed:%s", err)
 		return err
 	}
+
+	vsocket.Create(&vsocket.SocketInfo{Pipe: gPipe,
+		IsAllowSend: func() bool {
+			return true
+		},
+		Send: func(data []uint8, ip uint32, port uint16) {
+			udp.Send(fsp.BytesToFrame(data, false), ip, port)
+		}})
+
+	udp.RegisterObserver(func(data []uint8, ip uint32, port uint16) {
+		pipe := (uint64(ip) << 32) + uint64(port)
+		fsp.Receive(data, pipe, ip, port)
+	})
+
+	fsp.RegisterObserver(func(data []uint8, pipe uint64, params ...any) {
+		vsocket.Receive(&vsocket.RxParam{Pipe: gPipe, Data: data, IP: params[0].(uint32), Port: params[1].(uint16)})
+	})
 
 	gLocalIA = ia
 	gCoreIA = coreIA
@@ -44,7 +65,7 @@ func Load(ia uint32, localIP uint32, localPort uint16, coreIA uint32, coreIP uin
 }
 
 // dealSlRx 处理标准层回调函数
-func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port uint16) {
+func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, pipe int, ip uint32, port uint16) {
 	if gLocalIA == utz.IAInvalid || standardHeader.DstIA != gLocalIA {
 		return
 	}
@@ -130,7 +151,7 @@ func dealSlRx(data []uint8, standardHeader *utz.StandardHeader, ip uint32, port 
 		resp = append(routeHeader.Bytes(), resp...)
 	}
 
-	standardlayer.Send(resp, &ackHeader, ip, port)
+	standardlayer.Send(resp, &ackHeader, gPipe, ip, port)
 }
 
 func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) {
@@ -162,7 +183,7 @@ func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) 
 	frame = append(frame, ackTcpHeader.Bytes()...)
 	frame = append(frame, utz.BytesToCcpFrame(payload)...)
 
-	standardlayer.Send(frame, &ackStandardHeader, gCoreIP, gCorePort)
+	standardlayer.Send(frame, &ackStandardHeader, gPipe, gCoreIP, gCorePort)
 }
 
 // Register 注册服务
@@ -236,7 +257,7 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 		}
 	}
 
-	standardlayer.Send(arr, &header, gCoreIP, gCorePort)
+	standardlayer.Send(arr, &header, gPipe, gCoreIP, gCorePort)
 	return nil
 }
 

@@ -78,5 +78,5 @@ func sendConnect() {
 	header.NextHead = utz.HeaderCmp
 	header.FrameIndex = utz.GetFrameIndex()
 
-	standardlayer.Send(utz.BytesToCcpFrame([]uint8{utz.CmpConnectParent}), &header, gSlaveIP, gSlavePort)
+	standardlayer.Send(utz.BytesToCcpFrame([]uint8{utz.CmpConnectParent}), &header, gPipe, gSlaveIP, gSlavePort)
 }

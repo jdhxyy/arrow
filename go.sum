@@ -17,8 +17,8 @@ github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec h1:86zMDf/wQmYk3
 github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec/go.mod h1:0FF4SAVPV/pENqBY/5aXnAuXz9lStYrL2/Vcli86t/E=
 github.com/jdhxyy/skiplist v1.1.4 h1:L7VafO6vgwsKQ42nYj4byjxVc16zI5L0u7n6k9JNsbE=
 github.com/jdhxyy/skiplist v1.1.4/go.mod h1:jdOjeSqFlHJ0sLBiEy8um5ymmwO0K3TEMeGYrX9GxoE=
-github.com/jdhxyy/standardlayer v0.0.0-20230122131254-f8a028a149f0 h1:GBex57oBN42xFpykiJqGvPbuBrMc8cgipl2jZWMkEPw=
-github.com/jdhxyy/standardlayer v0.0.0-20230122131254-f8a028a149f0/go.mod h1:BoWjCfkM2EapUIG2DIbBWv+bmTwHAfzUEJETjrh3qTA=
+github.com/jdhxyy/standardlayer v0.0.0-20230623084506-f1f2845c7754 h1:UtLlxCtSCHfuZ/gMXbN21sIhLz+sLnFA+XfHmHWW4n4=
+github.com/jdhxyy/standardlayer v0.0.0-20230623084506-f1f2845c7754/go.mod h1:BoWjCfkM2EapUIG2DIbBWv+bmTwHAfzUEJETjrh3qTA=
 github.com/jdhxyy/stuk v0.0.0-20230122124426-2c5d62d11044 h1:5s7TV11TTIvjkKmr6WJtgovGpnN301Hoyr3o1vDN+uc=
 github.com/jdhxyy/stuk v0.0.0-20230122124426-2c5d62d11044/go.mod h1:aJJ2q8+uNijFiOeVYV1YJExuCliZGdfH+KatYjv/gNc=
 github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9 h1:md65l8P83bE88DZCsgDmBO+TndF5zFyPKsSmR+GrI0U=

@@ -9,7 +9,7 @@ require (
 	github.com/jdhxyy/lagan v0.0.0-20220306095625-f4e9fff73677
 	github.com/jdhxyy/sbc-golang v0.0.0-20220320034031-8644687a8bec
 	github.com/jdhxyy/skiplist v1.1.4
-	github.com/jdhxyy/standardlayer v0.0.0-20230122131254-f8a028a149f0
+	github.com/jdhxyy/standardlayer v0.0.0-20230623084506-f1f2845c7754
 	github.com/jdhxyy/udp v0.0.0-20220320042153-4f82677382f9
 	github.com/jdhxyy/utz v0.0.0-20221224093846-462e3f8a62f7
 	github.com/jdhxyy/vsocket-golang v0.0.0-20230122131004-70cb9de5422c

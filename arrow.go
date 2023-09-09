@@ -160,6 +160,7 @@ func sendAckFrame(standardHeader *utz.StandardHeader, tcpHeader *utz.TcpHeader) 
 	ackStandardHeader = *standardHeader
 	ackStandardHeader.DstIA = tcpHeader.SrcRelayIA
 	ackStandardHeader.SrcIA = gLocalIA
+	ackStandardHeader.FrameIndex = utz.GetFrameIndex()
 
 	var ackTcpHeader utz.TcpHeader
 	ackTcpHeader = *tcpHeader

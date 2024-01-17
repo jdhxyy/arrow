@@ -263,6 +263,42 @@ func Send(protocol uint8, cmd uint8, data []uint8, dstIA uint32) error {
 	return nil
 }
 
+// Multicast 基于CCP协议组播发送数据.gatewayIA是组播经过的网关IA地址
+func Multicast(protocol uint8, cmd uint8, data []uint8, gatewayIA uint32) error {
+	if gIsConnectParent == false {
+		return errors.New("is not connect")
+	}
+
+	var header utz.StandardHeader
+	header.NextHead = utz.HeaderRoute
+	header.SrcIA = gLocalIA
+	header.DstIA = 0xFFFFFFFE
+	header.FrameIndex = utz.GetFrameIndex()
+
+	routeHeader := utz.RouteHeader{NextHead: utz.HeaderTcp, IA: gatewayIA}
+
+	arr := make([]uint8, 1)
+	arr[0] = cmd
+	arr = append(arr, data...)
+	arr = utz.BytesToCcpFrame(arr)
+
+	var tcpHeader utz.TcpHeader
+	tcpHeader.SrcRelayIA = gLocalIA
+	tcpHeader.DstRelayIA = gCoreIA
+	tcpHeader.ControlWord.IsQos1 = true
+	tcpHeader.ControlWord.IsContinueSend = false
+	tcpHeader.ControlWord.IsAckSend = false
+	tcpHeader.ControlWord.IsReceiveAckSend = false
+	tcpHeader.AgingTime = 0
+	tcpHeader.NextHead = protocol
+
+	arr = append(tcpHeader.Bytes(), arr...)
+	arr = append(routeHeader.Bytes(), arr...)
+
+	standardlayer.Send(arr, &header, gPipe, gCoreIP, gCorePort)
+	return nil
+}
+
 // IsConnect 是否连接核心网
 func IsConnect() bool {
 	return gIsConnectParent

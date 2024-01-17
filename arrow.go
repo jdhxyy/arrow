@@ -284,7 +284,7 @@ func Multicast(protocol uint8, cmd uint8, data []uint8, gatewayIA uint32) error 
 	tcpHeader.SrcRelayIA = gLocalIA
 	// 组播特殊处理,中继节点是下一跳的目的节点
 	tcpHeader.DstRelayIA = gatewayIA
-	tcpHeader.ControlWord.IsQos1 = true
+	tcpHeader.ControlWord.IsQos1 = false
 	tcpHeader.ControlWord.IsContinueSend = false
 	tcpHeader.ControlWord.IsAckSend = false
 	tcpHeader.ControlWord.IsReceiveAckSend = false

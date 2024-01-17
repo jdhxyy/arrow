@@ -270,12 +270,10 @@ func Multicast(protocol uint8, cmd uint8, data []uint8, gatewayIA uint32) error 
 	}
 
 	var header utz.StandardHeader
-	header.NextHead = utz.HeaderRoute
+	header.NextHead = utz.HeaderTcp
 	header.SrcIA = gLocalIA
 	header.DstIA = 0xFFFFFFFE
 	header.FrameIndex = utz.GetFrameIndex()
-
-	routeHeader := utz.RouteHeader{NextHead: utz.HeaderTcp, IA: gatewayIA}
 
 	arr := make([]uint8, 1)
 	arr[0] = cmd
@@ -284,7 +282,8 @@ func Multicast(protocol uint8, cmd uint8, data []uint8, gatewayIA uint32) error 
 
 	var tcpHeader utz.TcpHeader
 	tcpHeader.SrcRelayIA = gLocalIA
-	tcpHeader.DstRelayIA = gCoreIA
+	// 组播特殊处理,中继节点是下一跳的目的节点
+	tcpHeader.DstRelayIA = gatewayIA
 	tcpHeader.ControlWord.IsQos1 = true
 	tcpHeader.ControlWord.IsContinueSend = false
 	tcpHeader.ControlWord.IsAckSend = false
@@ -293,8 +292,6 @@ func Multicast(protocol uint8, cmd uint8, data []uint8, gatewayIA uint32) error 
 	tcpHeader.NextHead = protocol
 
 	arr = append(tcpHeader.Bytes(), arr...)
-	arr = append(routeHeader.Bytes(), arr...)
-
 	standardlayer.Send(arr, &header, gPipe, gCoreIP, gCorePort)
 	return nil
 }
